@@ -8,6 +8,7 @@ app.use(morgan('dev'));
 
 app.get('/apps', (req, res) => {
     const { sort, genres } = req.query;
+    let results = playstore
 
     if (sort) {
         if (!['app', 'rating'].includes(sort)) {
@@ -21,26 +22,37 @@ app.get('/apps', (req, res) => {
         }
     }
 
-    // let genreList = ['Action', 'Puzzle', 'Strategy', 'Casual', 'Arcade', 'Card']
-
-    let results = playstore
-        .filter(game => {
-            return game.Genres === genres
-        })
-
-    if (sort) {
-        results.sort((a, b) => {
-            return a[sort] > b[sort] ? 1 : a[sort] < b[sort] ? -1 : 0;
-        });
+    if (genres) {
+         results = playstore
+            .filter(game => {
+                return game.Genres === genres
+            })
     }
 
-    // if(sort === 'Rating'){
-    //     results.sort((a , b) => a.Rating < b.Rating ? -1 : 1);
-    // }
+    if (sort) {
 
-    // if(sort === 'app'){
-    //     results.sort();
-    // }
+        if (sort === 'rating') {
+            results = playstore.sort((a, b) => a.Rating < b.Rating ? -1 : 1);
+        }
+
+        if (sort === 'app') {
+            results = playstore.App.sort((a, b) => {
+                let res;
+                const aApp = a.App.toUppercase();
+                const bApp = b.App.toUppercase();
+
+                if(a.App > b.App){
+                    res = 1
+                }
+
+                else if(a.App < b.App){
+                    res = -1
+                }
+
+                return res
+            });
+        }
+    }
 
     res.json(results);
 })
