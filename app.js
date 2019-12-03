@@ -23,7 +23,7 @@ app.get('/apps', (req, res) => {
     }
 
     if (genres) {
-         results = playstore
+        results = playstore
             .filter(game => {
                 return game.Genres === genres
             })
@@ -36,20 +36,15 @@ app.get('/apps', (req, res) => {
         }
 
         if (sort === 'app') {
-            results = playstore.App.sort((a, b) => {
-                let res;
-                const aApp = a.App.toUppercase();
-                const bApp = b.App.toUppercase();
+            results = playstore.sort((a, b) => {
+                const aApp = a.App.toUpperCase();
+                const bApp = b.App.toUpperCase();
 
-                if(a.App > b.App){
-                    res = 1
-                }
+                let resp;
 
-                else if(a.App < b.App){
-                    res = -1
-                }
-
-                return res
+                if (a.App > b.App) { resp = 1 }
+                else if (b.App > a.App) { resp = -1 }
+                return resp
             });
         }
     }
