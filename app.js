@@ -10,23 +10,25 @@ app.get('/apps', (req, res) => {
     const { sort, genres } = req.query;
     let results = playstore
 
+
+
     if (sort) {
         if (!['app', 'rating'].includes(sort)) {
-            return res.status(400).send('Sort must be one of app or rating');
+            return res.status(400).send({ message: 'Sort must be one of app or rating' });
         }
     }
 
     if (genres) {
-        if (!['Action', 'Puzzle', 'Strategy', 'Casual', 'Arcade', 'Card'].includes(genres)) {
-            return res.status(400).send('Genre must be included');
+        const fsLCap = genres.charAt(0).toUpperCase() + genres.substring(1);
+        if (!['Action', 'Puzzle', 'Strategy', 'Casual', 'Arcade', 'Card'].includes(fsLCap)) {
+            return res.status(400).send({ message: 'Genre must be included' });
         }
-    }
-
-    if (genres) {
-        results = playstore
-            .filter(game => {
-                return game.Genres === genres
-            })
+        else {
+            results = playstore
+                .filter(game => {
+                    return game.Genres === fsLCap
+                })
+        }
     }
 
     if (sort) {
@@ -52,9 +54,8 @@ app.get('/apps', (req, res) => {
     res.json(results);
 })
 
-app.listen(8080, () => {
-    console.log('Server started on PORT 8080')
-})
+app.listen(8000, () => {
+    console.log('Server started on PORT 8000');
+});
 
-
-
+module.exports = app;
